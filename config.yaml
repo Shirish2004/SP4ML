@@ -1,0 +1,128 @@
+# ================================
+# CONFIGURATION FILE FOR AUDIO CLASSIFICATION EXPERIMENTS
+# ================================
+
+experiment:
+  name: "Emotion_Classification"
+  description: "Comparing MFCCs, Mel Spectrograms, and Fractional Features for Emotion Classification"
+  seed: 42
+  mode: "train"  # Options: train, evaluate, test, extract
+  feature_type: "both"  # Options: mfcc, mel, both, fractional_mfcc, fractional_mel, combined_fractional
+  num_classes: 7
+  # fractional_orders: [0.1, 0.3, 0.7, 0.9, 1.3]
+  fractional_orders: [0.9]
+
+# ================================
+# DATA CONFIGURATION
+# ================================
+data:
+  dataset_root: "/home/shirish/Phd/Coursework/sp4ml/sp4ml/utils/data"
+  metadata_path: "/home/shirish/Phd/Coursework/sp4ml/sp4ml/utils/data/metadata.csv"
+  features_dir: "/home/shirish/Phd/Coursework/sp4ml/sp4ml/utils/features"
+  split_data: True
+  train_ratio: 0.75
+  val_ratio: 0.20
+  test_ratio: 0.05
+  shuffle_data: True
+  stratify: False
+  augmentations: True
+
+# ================================
+# FEATURE EXTRACTION SETTINGS
+# ================================
+features:
+  sample_rate: 16000
+  max_length: 100
+
+  mfcc:
+    enabled: True
+    num_mfcc: 13
+    dct_type: 2
+    delta: True
+    delta2: True
+
+  mel:
+    enabled: True
+    n_mels: 128
+    fmin: 0
+    fmax: 8000
+    power: 2
+    log_scale: True
+
+  fractional:
+    enabled: True
+    save_plots: True
+
+# ================================
+# MODEL CONFIGURATION
+# ================================
+model:
+  architectures:
+    - resnet18
+    - resnet34
+    - resnet50
+    - densenet121
+    - densenet161
+  pretrained: True
+  input_channels: 2  # 1 for grayscale, 2 for combined
+  dropout: 0.3
+
+# ================================
+# TRAINING SETTINGS
+# ================================
+training:
+  batch_size: 32
+  num_epochs: 50
+  learning_rate: 0.001
+  optimizer: "adam"
+  weight_decay: 0.00001
+  loss_function: "cross_entropy"
+  device: "cuda"
+
+  checkpoint_path: "/home/shirish/Phd/Coursework/sp4ml/utils/models/checkpoints"
+  save_model_every: 5
+  save_model_for_each_feature: True
+
+  early_stopping:
+    enabled: True
+    patience: 5
+
+# ================================
+# DATA AUGMENTATION SETTINGS
+# ================================
+augmentations:
+  time_masking: True
+  time_mask_param: 30
+  frequency_masking: True
+  frequency_mask_param: 20
+  gaussian_noise: True
+  noise_level: 0.005
+
+# ================================
+# LOGGING & VISUALIZATION
+# ================================
+logging:
+  enable_tensorboard: True
+  tensorboard_logdir: "runs/"
+  save_csv_metrics: True
+  csv_log_path: "logs/metrics/"
+  log_interval: 10
+
+# ================================
+# EVALUATION SETTINGS
+# ================================
+evaluation:
+  batch_size: 32
+  metrics: ["accuracy", "f1_score", "precision", "recall"]
+  confusion_matrix: True
+  class_wise_results: True
+  save_csv_report: True
+
+# ================================
+# TESTING SETTINGS
+# ================================
+testing:
+  batch_size: 16
+  generate_classification_report: True
+  save_predictions: True
+  prediction_output_file: "/home/shirish/Phd/Coursework/sp4ml/utils/predictions.csv"
