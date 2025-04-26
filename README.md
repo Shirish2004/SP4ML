@@ -1,8 +1,4 @@
-Here’s a **complete, highly detailed README.md** you can use directly for your project:
-
----
-
-# 📚 README: **Fractional-Order Feature Extraction and Emotion Classification**
+**Fractional-Order Feature Extraction and Emotion Classification**
 
 ---
 
